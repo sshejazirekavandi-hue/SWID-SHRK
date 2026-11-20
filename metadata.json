@@ -1,0 +1,8 @@
+{
+  "name": "Remix SWID-SHRK",
+  "description": "https://sshejazirekavandi-hue.github.io/SWID-SHRK/",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,21 @@
+# Logs & temporary files
+script.log
+*.log
+.DS_Store
+Thumbs.db
+
+# Data & model checkpoints
+*.npz
+checkpoints/
+
+# Dependencies & build output
+node_modules/
+dist/
+docs/
+
+# Local AI Studio metadata & environment secrets
+.aistudio/
+.env
+.env.*
+!.env.example
+

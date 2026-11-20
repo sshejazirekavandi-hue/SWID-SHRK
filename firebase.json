@@ -1,0 +1,21 @@
+{
+  "firestore": {
+    "database": "ai-studio-remixswidshrk-44e33972-3295-42b6-bb56-bfdd5b6978de",
+    "rules": "firestore.rules"
+  },
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "docs/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

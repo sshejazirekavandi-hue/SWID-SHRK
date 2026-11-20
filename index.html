@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#02040a" />
+  <meta name="robots" content="index, follow" />
+
+  <title>SWID-SHRK — Mechanical &amp; Aerospace Research Lab</title>
+  <meta name="description" content="SWID-SHRK research lab: fatigue and fracture, neural biomechanics, energy-absorbing metamaterials, and fracture in cementitious materials. Abaqus simulations, tutorials, and publications." />
+  <meta property="og:title" content="SWID-SHRK — Mechanical &amp; Aerospace Research Lab" />
+  <meta property="og:description" content="SWID-SHRK research lab: fatigue and fracture, neural biomechanics, energy-absorbing metamaterials, and fracture in cementitious materials. Abaqus simulations, tutorials, and publications." />
+  <meta name="author" content="Pouria Hejazi Rekavandi" />
+  <link rel="canonical" href="https://swid-shrk.umbc.edu/" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23050505'/%3E%3Cpath d='M8 24L16 8l8 16' fill='none' stroke='%2300ff41' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='17' r='3' fill='%2300b8ff'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500;1,600&family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Roboto+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" />
+  <script type="text/javascript">
+    // Apply saved theme immediately before first paint to prevent FOUC
+    (function () {
+      try {
+        var saved = localStorage.getItem('swid_theme');
+        var theme = saved === 'light' || saved === 'dark' ? saved : 'dark';
+        var root = document.documentElement;
+        root.classList.remove('dark', 'light');
+        root.classList.add(theme);
+        root.setAttribute('data-theme', theme);
+        root.style.colorScheme = theme;
+      } catch (e) {}
+    })();
+  </script>
+  <script type="text/javascript">
+    // Restore SPA route and query parameters redirected from public/404.html
+    (function (l) {
+      if (l.search && l.search[1] === '/') {
+        var parts = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        });
+        var capturedPath = (parts[0] || '').replace(/^\/+|\/+$/g, '');
+        var firstSegment = capturedPath.split('/')[0];
+        var validTabs = [
+          'home', 'team', 'research', 'publications', 'students',
+          'gear', 'abaqus', 'chat', 'qa', 'mail', 'contact', 'news'
+        ];
+        var rawQuery = parts.slice(1).join('&');
+        var params = new URLSearchParams(rawQuery);
+        if (firstSegment && validTabs.indexOf(firstSegment) !== -1 && !params.has('tab')) {
+          params.set('tab', firstSegment);
+        }
+        var searchStr = params.toString();
+        var nextUrl =
+          l.pathname +
+          (searchStr ? '?' + searchStr : '') +
+          l.hash;
+        window.history.replaceState(null, '', nextUrl);
+      }
+    })(window.location);
+  </script>
+</head>
+<body class="bg-[var(--bg)] text-[var(--text)] font-mono selection:bg-sky-200 selection:text-slate-950 dark:selection:bg-[#00ff41]/20 dark:selection:text-[#00ff41] min-h-screen">
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,1023 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root,
+  html.dark {
+    --bg: #02040a;
+    --bg-elevated: #0a0f18;
+    --surface: #0d111a;
+    --surface-muted: #141b29;
+    --text: #e2e8f0;
+    --text-strong: #ffffff;
+    --text-muted: #94a3b8;
+    --line: #1e2638;
+    --border-strong: #334155;
+    --green: #00ff41;
+    --blue: #00b8ff;
+    --red: #ff3131;
+    --mint: #00e676;
+    --accent-primary: #00ff41;
+    --accent-secondary: #00b8ff;
+    --focus-ring: rgba(0, 255, 65, 0.55);
+    --nav-bg: rgba(2, 4, 10, 0.95);
+    --footer-bg: #010308;
+  }
+
+  html.light {
+    --bg: #ffffff;
+    --bg-elevated: #f8fafc;
+    --surface: #ffffff;
+    --surface-muted: #f1f5f9;
+    --text: #090d16;
+    --text-strong: #020617;
+    --text-muted: #334155;
+    --line: #94a3b8;
+    --border-strong: #0f172a;
+    --green: #047857;
+    --blue: #0369a1;
+    --red: #b91c1c;
+    --mint: #065f46;
+    --accent-primary: #047857;
+    --accent-secondary: #0369a1;
+    --focus-ring: rgba(3, 105, 161, 0.65);
+    --nav-bg: rgba(255, 255, 255, 0.97);
+    --footer-bg: #f8fafc;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Roboto Mono', monospace;
+    overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  html[dir="rtl"], .rtl-layout {
+    font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+  }
+
+  html[dir="rtl"] .font-mono, .rtl-layout .font-mono {
+    font-family: 'Vazirmatn', 'Roboto Mono', monospace;
+  }
+}
+
+/* Custom Cosmic Background animations */
+@keyframes cosmic-pulse {
+  0% { transform: scale(1.01); opacity: 0.85; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.6); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes pulse-badge {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.4, 1.8); opacity: 0; }
+}
+
+@keyframes logoFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+    filter: drop-shadow(0 0 0px rgba(0, 184, 255, 0));
+  }
+  50% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 30px rgba(0, 184, 255, 0.6));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px rgba(0, 184, 255, 0.45));
+  }
+}
+
+@keyframes cosmic-fade-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.92);
+    filter: brightness(0.75);
+  }
+  65% {
+    opacity: 0.92;
+    transform: translate3d(0, 0, 0) scale(1.01);
+    filter: brightness(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+.fade-in {
+  animation: cosmic-fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform, filter;
+}
+
+.fade-in.duration-200 {
+  animation-duration: 200ms;
+}
+
+.fade-in.duration-300 {
+  animation-duration: 300ms;
+}
+
+.fade-in.duration-500 {
+  animation-duration: 500ms;
+}
+
+.animate-fade-in {
+  animation: cosmic-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+.blackhole-fade-in {
+  animation:
+    cosmic-fade-in 1.8s cubic-bezier(0.16, 1, 0.3, 1) both,
+    cosmic-pulse 30s 1.8s infinite alternate ease-in-out;
+  will-change: opacity, transform, filter;
+}
+
+.animate-logo-fade-in {
+  animation: logoFadeIn 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform, filter;
+}
+
+.animate-cosmic {
+  animation: cosmic-pulse 30s infinite alternate ease-in-out;
+}
+
+.animate-badge-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid #00ff41;
+  animation: pulse-badge 2.4s infinite;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel Decorative', Georgia, serif;
+}
+
+.font-orbitron {
+  font-family: 'Orbitron', system-ui, sans-serif;
+}
+
+.font-rajdhani {
+  font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-space {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-section-title {
+  font-family: 'Rajdhani', 'Space Grotesk', system-ui, sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.font-allura {
+  font-family: 'Allura', 'Segoe Script', cursive;
+}
+
+.font-poetic {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+}
+
+/* Glowing utilities */
+.glow-green {
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
+}
+
+.glow-blue {
+  text-shadow: 0 0 10px rgba(0, 184, 255, 0.7);
+}
+
+.box-glow-blue {
+  box-shadow: 0 0 25px rgba(0, 184, 255, 0.25);
+}
+
+.box-glow-green {
+  box-shadow: 0 0 25px rgba(0, 255, 65, 0.25);
+}
+
+html.light .glow-green,
+html.light .glow-blue {
+  text-shadow: none;
+}
+
+html.light .box-glow-blue,
+html.light .box-glow-green {
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+}
+
+/* Neural Background Animations for old.jpg */
+@keyframes neural-orbit {
+  0% {
+    transform: scale(1.18) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.36) rotate(180deg);
+  }
+  100% {
+    transform: scale(1.18) rotate(360deg);
+  }
+}
+
+@keyframes neural-pulse {
+  0%, 100% {
+    opacity: 0.75;
+    filter: saturate(1.2) brightness(0.95) contrast(1.15);
+  }
+  50% {
+    opacity: 0.98;
+    filter: saturate(1.85) brightness(1.22) contrast(1.3) drop-shadow(0 0 18px rgba(0, 184, 255, 0.7));
+  }
+}
+
+@keyframes neural-sweep {
+  0% {
+    transform: translateY(-100%) rotate(25deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(120%) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+.animate-neural-orbit {
+  animation: neural-orbit 55s linear infinite;
+  will-change: transform;
+}
+
+.animate-neural-pulse {
+  animation: neural-pulse 7s ease-in-out infinite;
+  will-change: filter, opacity;
+}
+
+.animate-neural-sweep {
+  animation: neural-sweep 4s ease-in-out infinite;
+}
+
+/* 3D Celestial Planetary Spin Rotation around the Vertical Y-Axis (GPU-composited) */
+@keyframes celestial-spin {
+  0% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+  100% { transform: translate3d(0, 0, 0) rotateY(360deg); }
+}
+
+@keyframes celestial-reverse-spin {
+  0% { transform: translate3d(0, 0, 0) rotateY(360deg); }
+  100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+}
+
+@keyframes celestial-spin-y {
+  0% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+  100% { transform: translate3d(0, 0, 0) rotateY(360deg); }
+}
+
+@keyframes celestial-spin-y-reverse {
+  0% { transform: translate3d(0, 0, 0) rotateY(360deg); }
+  100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+}
+
+/* Horizontal Surface Map Panoramic Drift along X-Axis (GPU-composited translate3d) */
+@keyframes surface-drift-x {
+  0% { transform: translate3d(0%, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes surface-drift-x-reverse {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0%, 0, 0); }
+}
+
+.celestial-gpu-layer {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Pure GPU-composited planetary animations (zero main-thread style recalculation) */
+.animate-planet-spin {
+  animation: celestial-spin-y 30s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.animate-planet-spin-fast {
+  animation: celestial-spin-y 16s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.animate-planet-spin-reverse {
+  animation: celestial-spin-y-reverse 38s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.animate-surface-drift {
+  animation: surface-drift-x 18s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.animate-surface-drift-fast {
+  animation: surface-drift-x 11s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.animate-planet-moon-orbit {
+  animation: celestial-revolve 9s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Pause off-screen or background hero animations cleanly */
+.anim-paused,
+.anim-paused * {
+  animation-play-state: paused !important;
+}
+
+@keyframes celestial-warp-flare {
+  0% {
+    transform: translate3d(0, 0, 0) scale3d(0.92, 0.92, 1) rotate(0deg);
+    opacity: 0.95;
+    filter: brightness(1.8) drop-shadow(0 0 35px rgba(0, 255, 65, 0.9));
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scale3d(1.12, 1.12, 1) rotate(180deg);
+    opacity: 1;
+    filter: brightness(2.2) drop-shadow(0 0 50px rgba(0, 184, 255, 1));
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1) rotate(360deg);
+    opacity: 0.85;
+    filter: brightness(1);
+  }
+}
+
+.animate-warp-burst {
+  animation: celestial-warp-flare 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, filter, opacity;
+}
+
+/* Celestial Orbital Revolution (Keplerian Orbit Motion around Center) */
+@keyframes celestial-revolve {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(360deg);
+  }
+}
+
+@keyframes celestial-revolve-reverse {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(360deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes celestial-counter-revolve {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-360deg);
+  }
+}
+
+@keyframes celestial-counter-revolve-reverse {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-360deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes orbit-pulse {
+  0%, 100% {
+    opacity: 0.35;
+    border-color: rgba(245, 158, 11, 0.35);
+  }
+  50% {
+    opacity: 0.85;
+    border-color: rgba(0, 229, 255, 0.7);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+  }
+}
+
+/* Persistent Keplerian Elliptical Orbit Styling */
+.orbit-ellipse-plane {
+  transform: rotate(var(--orbit-tilt, -14deg)) scaleY(var(--orbit-eccentricity, 0.62));
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.orbit-planet-upright {
+  transform: scaleY(calc(1 / var(--orbit-eccentricity, 0.62))) rotate(calc(-1 * var(--orbit-tilt, -14deg)));
+  transform-origin: center center;
+  will-change: transform;
+}
+
+@keyframes trajectory-sweep-glow {
+  0%, 100% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  50% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 12px currentColor);
+  }
+}
+
+.animate-trajectory-glow {
+  animation: trajectory-sweep-glow 3s ease-in-out infinite;
+}
+
+/* Periodic Radial Gravitational Flare emitting from the Black Hole center */
+@keyframes blackhole-radial-flare {
+  0% {
+    opacity: 0;
+    transform: translate3d(0px, 0px, 0px) scale3d(0.55, 0.55, 1);
+  }
+  18% {
+    opacity: 0.34;
+    transform: translate3d(0px, 0px, 0px) scale3d(0.88, 0.88, 1);
+  }
+  58% {
+    opacity: 0.14;
+    transform: translate3d(0px, 0px, 0px) scale3d(1.65, 1.65, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0px, 0px, 0px) scale3d(2.25, 2.25, 1);
+  }
+}
+
+@keyframes blackhole-radial-flare-secondary {
+  0% {
+    opacity: 0;
+    transform: translate3d(0px, 0px, 0px) scale3d(0.62, 0.62, 1);
+  }
+  22% {
+    opacity: 0.24;
+    transform: translate3d(0px, 0px, 0px) scale3d(1.02, 1.02, 1);
+  }
+  68% {
+    opacity: 0.08;
+    transform: translate3d(0px, 0px, 0px) scale3d(1.85, 1.85, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0px, 0px, 0px) scale3d(2.45, 2.45, 1);
+  }
+}
+
+.animate-blackhole-radial-flare {
+  animation: blackhole-radial-flare 5.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.animate-blackhole-radial-flare-delayed {
+  animation: blackhole-radial-flare-secondary 5.6s cubic-bezier(0.16, 1, 0.3, 1) 2.8s infinite;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+/* Ethereal high-transparency Event Horizon photon ring pulsing via GPU-composited opacity + transform */
+@keyframes blackhole-center-border-pulse {
+  0%, 44%, 100% {
+    opacity: 0.38;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+  18% {
+    opacity: 0.64;
+    transform: translate3d(0, 0, 0) scale3d(1.018, 1.018, 1);
+  }
+  72% {
+    opacity: 0.5;
+    transform: translate3d(0, 0, 0) scale3d(1.008, 1.008, 1);
+  }
+}
+
+@keyframes blackhole-center-border-pulse-swallow {
+  0%, 44%, 100% {
+    opacity: 0.46;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+  18%, 72% {
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0) scale3d(1.022, 1.022, 1);
+  }
+}
+
+.animate-blackhole-border-pulse {
+  border-color: rgba(254, 215, 170, 0.28);
+  box-shadow:
+    0 0 6px 1px rgba(254, 215, 170, 0.26),
+    0 0 16px 3px rgba(251, 146, 60, 0.2),
+    0 0 30px 6px rgba(234, 88, 12, 0.1);
+  mix-blend-mode: screen;
+  animation: blackhole-center-border-pulse 5.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  will-change: opacity, transform;
+}
+
+.animate-blackhole-border-pulse-swallow {
+  border-color: rgba(254, 243, 199, 0.32);
+  box-shadow:
+    0 0 8px 1px rgba(255, 237, 213, 0.3),
+    0 0 20px 4px rgba(255, 202, 40, 0.26),
+    0 0 36px 8px rgba(255, 109, 0, 0.16);
+  mix-blend-mode: screen;
+  animation: blackhole-center-border-pulse-swallow 5.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  will-change: opacity, transform;
+}
+
+/* High-Energy Relativistic Plasma Jet animations (multi-harmonic velocity & smooth easing) */
+@keyframes jet-filament-flow {
+  0% {
+    stroke-dasharray: 42 12 88 18;
+    stroke-dashoffset: 0;
+    opacity: 0.68;
+  }
+  45% {
+    opacity: 0.96;
+  }
+  100% {
+    stroke-dasharray: 42 12 88 18;
+    stroke-dashoffset: -160;
+    opacity: 0.68;
+  }
+}
+
+@keyframes jet-spine-surge {
+  0% {
+    stroke-dasharray: 64 16 110 22;
+    stroke-dashoffset: 0;
+    opacity: 0.78;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dasharray: 64 16 110 22;
+    stroke-dashoffset: -212;
+    opacity: 0.78;
+  }
+}
+
+@keyframes jet-pulse-fast {
+  0% {
+    stroke-dasharray: 14 78 24 104;
+    stroke-dashoffset: 0;
+    opacity: 0.45;
+  }
+  35% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.85;
+  }
+  100% {
+    stroke-dasharray: 14 78 24 104;
+    stroke-dashoffset: -220;
+    opacity: 0.45;
+  }
+}
+
+@keyframes jet-core-breathe {
+  0%, 100% {
+    opacity: 0.78;
+    transform: scale3d(0.95, 0.97, 1);
+  }
+  45% {
+    opacity: 1;
+    transform: scale3d(1.06, 1.09, 1);
+  }
+}
+
+.animate-jet-filament-flow {
+  animation: jet-filament-flow 3.1s cubic-bezier(0.32, 0.08, 0.24, 1) infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-jet-filament-flow-delayed {
+  animation: jet-filament-flow 3.9s cubic-bezier(0.28, 0.12, 0.22, 1) -1.55s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-jet-filament-harmonic {
+  animation: jet-filament-flow 4.7s cubic-bezier(0.36, 0.06, 0.26, 1) -2.3s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-jet-spine-surge {
+  animation: jet-spine-surge 2.4s cubic-bezier(0.22, 0.68, 0.35, 1) infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-jet-pulse-fast {
+  animation: jet-pulse-fast 1.85s cubic-bezier(0.18, 0.72, 0.28, 1) infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-jet-pulse-fast-delayed {
+  animation: jet-pulse-fast 2.15s cubic-bezier(0.2, 0.7, 0.3, 1) -0.95s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-jet-core-breathe {
+  animation: jet-core-breathe 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-jet-filament-flow,
+  .animate-jet-filament-flow-delayed,
+  .animate-jet-filament-harmonic,
+  .animate-jet-spine-surge,
+  .animate-jet-pulse-fast,
+  .animate-jet-pulse-fast-delayed,
+  .animate-jet-core-breathe,
+  .animate-horizon-lensing-breathe,
+  .animate-lensing-arc-surge,
+  .animate-lensing-arc-flow,
+  .animate-lensing-arc-flow-fast,
+  .animate-lensing-arc-shear,
+  .animate-lensing-arc-flow-slow,
+  .animate-lensing-arc-drift,
+  .animate-lensing-knot-streak,
+  .animate-lensing-knot-streak-delayed,
+  .animate-outer-whirlpool-drift,
+  .animate-outer-whirlpool-drift-fast,
+  .animate-outer-lensing-caustic {
+    animation: none;
+  }
+}
+
+/* Living Kerr Event Horizon Gravitational Lensing Shimmer (Pure GPU transform + opacity) */
+@keyframes horizon-lensing-breathe {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    opacity: 0.92;
+  }
+  42% {
+    transform: translate3d(0, 0, 0) scale3d(1.022, 1.016, 1);
+    opacity: 1;
+  }
+  74% {
+    transform: translate3d(0, 0, 0) scale3d(1.008, 1.006, 1);
+    opacity: 0.96;
+  }
+}
+
+/* Innermost ISCO high-velocity plasma surge with subtle periastron acceleration */
+@keyframes lensing-arc-surge {
+  0% {
+    stroke-dasharray: 44 26 92 38;
+    stroke-dashoffset: 0;
+    opacity: 0.62;
+  }
+  26% {
+    stroke-dashoffset: -64;
+    opacity: 0.98;
+  }
+  62% {
+    stroke-dashoffset: -136;
+    opacity: 0.84;
+  }
+  100% {
+    stroke-dasharray: 44 26 92 38;
+    stroke-dashoffset: -200;
+    opacity: 0.62;
+  }
+}
+
+/* Mid-disk turbulent magnetic shear with subtle velocity inflections */
+@keyframes lensing-arc-flow {
+  0% {
+    stroke-dasharray: 58 28 112 42;
+    stroke-dashoffset: 0;
+    opacity: 0.56;
+  }
+  30% {
+    stroke-dashoffset: -82;
+    opacity: 0.92;
+  }
+  66% {
+    stroke-dashoffset: -164;
+    opacity: 0.78;
+  }
+  100% {
+    stroke-dasharray: 58 28 112 42;
+    stroke-dashoffset: -240;
+    opacity: 0.56;
+  }
+}
+
+/* Secondary harmonic plasma shear (distinct dash cadence & velocity curve) */
+@keyframes lensing-arc-shear {
+  0% {
+    stroke-dasharray: 34 22 76 32 48 28;
+    stroke-dashoffset: 0;
+    opacity: 0.52;
+  }
+  38% {
+    stroke-dashoffset: -104;
+    opacity: 0.9;
+  }
+  72% {
+    stroke-dashoffset: -182;
+    opacity: 0.74;
+  }
+  100% {
+    stroke-dasharray: 34 22 76 32 48 28;
+    stroke-dashoffset: -240;
+    opacity: 0.52;
+  }
+}
+
+/* Outer halo slower viscous orbital drift */
+@keyframes lensing-arc-drift {
+  0% {
+    stroke-dasharray: 84 44 132 60;
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  48% {
+    stroke-dashoffset: -168;
+    opacity: 0.72;
+  }
+  100% {
+    stroke-dasharray: 84 44 132 60;
+    stroke-dashoffset: -320;
+    opacity: 0.4;
+  }
+}
+
+/* Compact relativistic synchrotron knots streaking rapidly across the disk */
+@keyframes lensing-knot-streak {
+  0% {
+    stroke-dasharray: 14 118 22 146;
+    stroke-dashoffset: 0;
+    opacity: 0.35;
+  }
+  24% {
+    stroke-dashoffset: -86;
+    opacity: 1;
+  }
+  58% {
+    stroke-dashoffset: -196;
+    opacity: 0.88;
+  }
+  100% {
+    stroke-dasharray: 14 118 22 146;
+    stroke-dashoffset: -300;
+    opacity: 0.35;
+  }
+}
+
+.animate-horizon-lensing-breathe {
+  animation: horizon-lensing-breathe 6.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.animate-lensing-arc-surge {
+  animation: lensing-arc-surge 2.25s cubic-bezier(0.24, 0.58, 0.32, 1) infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-lensing-arc-flow-fast {
+  animation: lensing-arc-flow 2.95s cubic-bezier(0.28, 0.14, 0.24, 1) -0.6s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-lensing-arc-shear {
+  animation: lensing-arc-shear 3.65s cubic-bezier(0.34, 0.08, 0.26, 1) -1.35s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-lensing-arc-flow {
+  animation: lensing-arc-flow 4.45s cubic-bezier(0.32, 0.1, 0.24, 1) -2.1s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-lensing-arc-flow-slow {
+  animation: lensing-arc-shear 5.65s cubic-bezier(0.36, 0.08, 0.28, 1) -2.9s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-lensing-arc-drift {
+  animation: lensing-arc-drift 7.1s cubic-bezier(0.42, 0.04, 0.3, 1) -3.4s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-lensing-knot-streak {
+  animation: lensing-knot-streak 2.05s cubic-bezier(0.2, 0.66, 0.3, 1) infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.animate-lensing-knot-streak-delayed {
+  animation: lensing-knot-streak 2.55s cubic-bezier(0.22, 0.62, 0.32, 1) -1.15s infinite;
+  will-change: stroke-dashoffset, opacity;
+}
+
+/* Outer Disk Whirlpool Inward Spiral Drift & High-Velocity Plasma Lensing Caustics */
+@keyframes outer-whirlpool-drift {
+  0% {
+    transform: translate3d(0, 0, 0) rotateZ(0deg) scale3d(1.05, 1.05, 1);
+    opacity: 0.48;
+  }
+  45% {
+    transform: translate3d(0, 0, 0) rotateZ(165deg) scale3d(0.95, 0.95, 1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotateZ(360deg) scale3d(1.05, 1.05, 1);
+    opacity: 0.48;
+  }
+}
+
+@keyframes outer-whirlpool-drift-fast {
+  0% {
+    transform: translate3d(0, 0, 0) rotateZ(0deg) scale3d(1.03, 1.03, 1);
+    opacity: 0.42;
+  }
+  50% {
+    transform: translate3d(0, 0, 0) rotateZ(188deg) scale3d(0.92, 0.92, 1);
+    opacity: 0.86;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotateZ(360deg) scale3d(1.03, 1.03, 1);
+    opacity: 0.42;
+  }
+}
+
+@keyframes outer-lensing-caustic {
+  0% {
+    transform: translate3d(0, 0, 0) rotateZ(0deg) scale3d(1, 1, 1);
+    opacity: 0.56;
+  }
+  38% {
+    transform: translate3d(0, 0, 0) rotateZ(142deg) scale3d(1.035, 1.035, 1);
+    opacity: 0.88;
+  }
+  72% {
+    transform: translate3d(0, 0, 0) rotateZ(264deg) scale3d(0.985, 0.985, 1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotateZ(360deg) scale3d(1, 1, 1);
+    opacity: 0.56;
+  }
+}
+
+.animate-outer-whirlpool-drift {
+  animation: outer-whirlpool-drift 16.5s linear infinite;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.animate-outer-whirlpool-drift-fast {
+  animation: outer-whirlpool-drift-fast 10.4s linear -4.2s infinite;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.animate-outer-lensing-caustic {
+  animation: outer-lensing-caustic 8.2s linear infinite;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+/* Relativistic Jet Burst at the end of star swallowing (reveals the SWID-SHRK crest) */
+@keyframes blackhole-jet-burst {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scaleY(0.14) scaleX(0.32);
+  }
+  22% {
+    opacity: 0.98;
+    transform: translate3d(0, 0, 0) scaleY(1.16) scaleX(1.12);
+  }
+  62% {
+    opacity: 0.76;
+    transform: translate3d(0, 0, 0) scaleY(1.02) scaleX(0.92);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scaleY(0.9) scaleX(0.48);
+  }
+}
+
+.animate-blackhole-jet-burst {
+  animation: blackhole-jet-burst 1.45s cubic-bezier(0.12, 0.9, 0.24, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* SWID-SHRK Crest emerging smoothly out of the black hole jet after swallowing ends */
+@keyframes crest-emerge-from-jet {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -24px, 0) scale(0.14);
+    filter: brightness(2.4) blur(6px) drop-shadow(0 0 24px rgba(125, 211, 252, 0.9));
+  }
+  55% {
+    opacity: 0.95;
+    transform: translate3d(0, 2px, 0) scale(1.05);
+    filter: brightness(1.45) blur(0px) drop-shadow(0 0 18px rgba(255, 255, 255, 0.92));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: brightness(1.15) contrast(1.25);
+  }
+}
+
+.animate-crest-emerge-from-jet {
+  animation: crest-emerge-from-jet 1.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity, filter;
+}
+
+/* Subtle Cyber Glitch Hover Effect using CSS transforms for the SWID-SHRK Crest */
+@keyframes crest-glitch {
+  0% {
+    transform: translate3d(0, 0, 0) skewX(0deg) scale3d(1, 1, 1);
+  }
+  18% {
+    transform: translate3d(-2px, 1px, 0) skewX(-3deg) scale3d(1.03, 1.03, 1);
+    filter: brightness(1.35) contrast(1.28) drop-shadow(-2px 0 6px rgba(0, 184, 255, 0.85)) drop-shadow(2px 0 6px rgba(0, 255, 65, 0.75));
+  }
+  36% {
+    transform: translate3d(2px, -1px, 0) skewX(2.5deg) scale3d(1.04, 1.04, 1);
+  }
+  54% {
+    transform: translate3d(-1.5px, -1px, 0) skewX(-1.5deg) scale3d(1.03, 1.03, 1);
+    filter: brightness(1.3) contrast(1.25) drop-shadow(2px 0 8px rgba(0, 184, 255, 0.8)) drop-shadow(-2px 0 5px rgba(255, 49, 49, 0.45));
+  }
+  72% {
+    transform: translate3d(1px, 1px, 0) skewX(1deg) scale3d(1.04, 1.04, 1);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) skewX(0deg) scale3d(1.05, 1.05, 1);
+  }
+}
+
+.crest-glitch-hover:hover,
+.group:hover .crest-glitch-target,
+.crest-glitch-active {
+  animation: crest-glitch 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  will-change: transform, filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crest-glitch-hover:hover,
+  .group:hover .crest-glitch-target,
+  .crest-glitch-active {
+    animation: none;
+  }
+}
+
+

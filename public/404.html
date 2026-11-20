@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWID-SHRK — Redirecting...</title>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // Captures the requested path, query string, and hash and redirects to index.html
+      (function () {
+        var l = window.location;
+        var pathSegmentsToKeep = l.hostname.endsWith('.github.io') ? 1 : 0;
+        var baseSegments = l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep);
+        var basePath = baseSegments.join('/');
+        if (!basePath.endsWith('/')) {
+          basePath += '/';
+        }
+
+        var capturedPath = l.pathname
+          .slice(1)
+          .split('/')
+          .slice(pathSegmentsToKeep)
+          .join('/')
+          .replace(/&/g, '~and~');
+
+        var capturedQuery = l.search
+          ? '&' + l.search.slice(1).replace(/&/g, '~and~')
+          : '';
+
+        var redirectUrl =
+          l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          basePath +
+          '?/' +
+          capturedPath +
+          capturedQuery +
+          l.hash;
+
+        l.replace(redirectUrl);
+      })();
+    </script>
+  </head>
+  <body style="background:#02040a;color:#e0e0e0;font-family:monospace;padding:2rem;">
+    <p>Redirecting to SWID-SHRK...</p>
+  </body>
+</html>

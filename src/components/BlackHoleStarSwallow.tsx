@@ -736,6 +736,8 @@ export const BlackHoleStarSwallow: React.FC<BlackHoleStarSwallowProps> = ({
 
     let rafId: number | null = null;
     let lastTime = performance.now();
+    let lastCanvasPaint = 0;
+    const CANVAS_PAINT_INTERVAL_MS = 1000 / 30; // Cap 2D canvas repaints at 30 Hz (50–75% fewer paints on 60–120Hz displays)
     let elapsedSec = 0;
     let innerDiskDeg = 0;
     let outerDiskDeg = 0;
@@ -755,7 +757,7 @@ export const BlackHoleStarSwallow: React.FC<BlackHoleStarSwallowProps> = ({
       speedMultiplier += (targetSpeed - speedMultiplier) * Math.min(1, dt * 4.5);
       elapsedSec += dt * speedMultiplier;
 
-      // 1. Differential Keplerian GPU Disk Rotations (pure transform, zero filter)
+      // 1. Differential Keplerian GPU Disk Rotations (pure compositor transform, zero paint)
       innerDiskDeg = (innerDiskDeg + dt * 38 * speedMultiplier) % 360;
       outerDiskDeg = (outerDiskDeg + dt * 21 * speedMultiplier) % 360;
       photonRingDeg = (photonRingDeg + dt * 66 * speedMultiplier) % 360;
@@ -769,71 +771,77 @@ export const BlackHoleStarSwallow: React.FC<BlackHoleStarSwallowProps> = ({
       if (outerDiskRef.current) outerDiskRef.current.style.transform = outerTransform;
       if (photonRingRef.current) photonRingRef.current.style.transform = photonTransform;
 
-      // 2. Render Bipolar Relativistic Plasma Jets (North + Antipodal South)
-      if (jetCtx && jetGrads) {
-        jetCtx.clearRect(0, 0, 220, 700);
-        jetCtx.save();
-        jetCtx.globalCompositeOperation = 'lighter';
+      // Gate 2D canvas repaints (relativistic jets + horizon lensing streams) to 30 Hz
+      const shouldPaintCanvas = singleStatic || now - lastCanvasPaint >= CANVAS_PAINT_INTERVAL_MS;
+      if (shouldPaintCanvas) {
+        lastCanvasPaint = now;
 
-        // North (Approaching) Jet: y = 0..350 (launch core at y = 333)
-        drawJetPole(jetCtx, jetGrads, elapsedSec, 0, 1.0);
+        // 2. Render Bipolar Relativistic Plasma Jets (North + Antipodal South)
+        if (jetCtx && jetGrads) {
+          jetCtx.clearRect(0, 0, 220, 700);
+          jetCtx.save();
+          jetCtx.globalCompositeOperation = 'lighter';
 
-        // South (Antipodal Counter-Jet): mirrored around y = 350 with subtle Doppler dimming (0.84)
-        jetCtx.save();
-        jetCtx.translate(220, 700);
-        jetCtx.rotate(Math.PI);
-        drawJetPole(jetCtx, jetGrads, elapsedSec, 2.35, 0.84);
-        jetCtx.restore();
+          // North (Approaching) Jet: y = 0..350 (launch core at y = 333)
+          drawJetPole(jetCtx, jetGrads, elapsedSec, 0, 1.0);
 
-        jetCtx.restore();
-      }
+          // South (Antipodal Counter-Jet): mirrored around y = 350 with subtle Doppler dimming (0.84)
+          jetCtx.save();
+          jetCtx.translate(220, 700);
+          jetCtx.rotate(Math.PI);
+          drawJetPole(jetCtx, jetGrads, elapsedSec, 2.35, 0.84);
+          jetCtx.restore();
 
-      // 3. Render GRMHD Gravitational Lensing & Accretion Plane Plasma Streams
-      if (lensCtx && lensGrads) {
-        lensCtx.clearRect(0, 0, 640, 360);
-        lensCtx.save();
-        lensCtx.globalCompositeOperation = 'lighter';
-        lensCtx.lineCap = 'round';
-        lensCtx.lineJoin = 'round';
-
-        for (let i = 0; i < LENSING_ARCS.length; i++) {
-          const arc = LENSING_ARCS[i];
-          const grad = lensGrads[arc.grad];
-          const c = arc.coords;
-          const wave = 0.78 + 0.22 * Math.sin(elapsedSec * 1.9 + arc.phase * 0.04);
-          const dashOffset = -(elapsedSec * arc.speed + arc.phase);
-
-          lensCtx.beginPath();
-          if (arc.type === 'cubic2') {
-            lensCtx.moveTo(c[0], c[1]);
-            lensCtx.bezierCurveTo(c[2], c[3], c[4], c[5], c[6], c[7]);
-            lensCtx.bezierCurveTo(c[8], c[9], c[10], c[11], c[12], c[13]);
-          } else if (arc.type === 'cubic1') {
-            lensCtx.moveTo(c[0], c[1]);
-            lensCtx.bezierCurveTo(c[2], c[3], c[4], c[5], c[6], c[7]);
-          } else {
-            lensCtx.moveTo(c[0], c[1]);
-            lensCtx.quadraticCurveTo(c[2], c[3], c[4], c[5]);
-            lensCtx.quadraticCurveTo(c[6], c[7], c[8], c[9]);
-          }
-
-          lensCtx.setLineDash(arc.dash);
-          lensCtx.lineDashOffset = dashOffset;
-          lensCtx.strokeStyle = grad;
-
-          // Soft wide glow stroke (replaces SVG feGaussianBlur)
-          lensCtx.globalAlpha = arc.alpha * 0.24 * wave;
-          lensCtx.lineWidth = arc.glowWidth;
-          lensCtx.stroke();
-
-          // Crisp core plasma filament
-          lensCtx.globalAlpha = arc.alpha * wave;
-          lensCtx.lineWidth = arc.width;
-          lensCtx.stroke();
+          jetCtx.restore();
         }
 
-        lensCtx.setLineDash([]);
-        lensCtx.restore();
+        // 3. Render GRMHD Gravitational Lensing & Accretion Plane Plasma Streams
+        if (lensCtx && lensGrads) {
+          lensCtx.clearRect(0, 0, 640, 360);
+          lensCtx.save();
+          lensCtx.globalCompositeOperation = 'lighter';
+          lensCtx.lineCap = 'round';
+          lensCtx.lineJoin = 'round';
+
+          for (let i = 0; i < LENSING_ARCS.length; i++) {
+            const arc = LENSING_ARCS[i];
+            const grad = lensGrads[arc.grad];
+            const c = arc.coords;
+            const wave = 0.78 + 0.22 * Math.sin(elapsedSec * 1.9 + arc.phase * 0.04);
+            const dashOffset = -(elapsedSec * arc.speed + arc.phase);
+
+            lensCtx.beginPath();
+            if (arc.type === 'cubic2') {
+              lensCtx.moveTo(c[0], c[1]);
+              lensCtx.bezierCurveTo(c[2], c[3], c[4], c[5], c[6], c[7]);
+              lensCtx.bezierCurveTo(c[8], c[9], c[10], c[11], c[12], c[13]);
+            } else if (arc.type === 'cubic1') {
+              lensCtx.moveTo(c[0], c[1]);
+              lensCtx.bezierCurveTo(c[2], c[3], c[4], c[5], c[6], c[7]);
+            } else {
+              lensCtx.moveTo(c[0], c[1]);
+              lensCtx.quadraticCurveTo(c[2], c[3], c[4], c[5]);
+              lensCtx.quadraticCurveTo(c[6], c[7], c[8], c[9]);
+            }
+
+            lensCtx.setLineDash(arc.dash);
+            lensCtx.lineDashOffset = dashOffset;
+            lensCtx.strokeStyle = grad;
+
+            // Soft wide glow stroke (replaces SVG feGaussianBlur)
+            lensCtx.globalAlpha = arc.alpha * 0.24 * wave;
+            lensCtx.lineWidth = arc.glowWidth;
+            lensCtx.stroke();
+
+            // Crisp core plasma filament
+            lensCtx.globalAlpha = arc.alpha * wave;
+            lensCtx.lineWidth = arc.width;
+            lensCtx.stroke();
+          }
+
+          lensCtx.setLineDash([]);
+          lensCtx.restore();
+        }
       }
 
       if (!singleStatic) {

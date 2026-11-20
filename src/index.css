@@ -78,65 +78,71 @@
   }
 }
 
-/* Custom Cosmic Background animations */
+/* Custom Cosmic Background animations (Pure GPU-composited transform + opacity) */
 @keyframes cosmic-pulse {
-  0% { transform: scale(1.01); opacity: 0.85; }
-  100% { transform: scale(1.1); opacity: 1; }
+  0% { transform: translate3d(0, 0, 0) scale3d(1.01, 1.01, 1); opacity: 0.85; }
+  100% { transform: translate3d(0, 0, 0) scale3d(1.1, 1.1, 1); opacity: 1; }
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.6); }
-  50% { opacity: 1; transform: scale(1.4); }
+  0%, 100% { opacity: 0.2; transform: translate3d(0, 0, 0) scale3d(0.6, 0.6, 1); }
+  50% { opacity: 1; transform: translate3d(0, 0, 0) scale3d(1.4, 1.4, 1); }
 }
 
 @keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+  0% { transform: translate3d(0, -100%, 0); }
+  100% { transform: translate3d(0, 100%, 0); }
 }
 
 @keyframes pulse-badge {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(1.4, 1.8); opacity: 0; }
+  0% { transform: translate3d(0, 0, 0) scale3d(1, 1, 1); opacity: 0.8; }
+  100% { transform: translate3d(0, 0, 0) scale3d(1.4, 1.8, 1); opacity: 0; }
 }
 
 @keyframes logoFadeIn {
   0% {
     opacity: 0;
-    transform: scale(0.88);
-    filter: drop-shadow(0 0 0px rgba(0, 184, 255, 0));
+    transform: translate3d(0, 0, 0) scale3d(0.88, 0.88, 1);
   }
   50% {
-    opacity: 0.7;
-    filter: drop-shadow(0 0 30px rgba(0, 184, 255, 0.6));
+    opacity: 0.78;
+    transform: translate3d(0, 0, 0) scale3d(1.02, 1.02, 1);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
-    filter: drop-shadow(0 0 20px rgba(0, 184, 255, 0.45));
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
 }
 
 @keyframes cosmic-fade-in {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) scale(0.92);
-    filter: brightness(0.75);
+    transform: translate3d(0, 0, 0) scale3d(0.95, 0.95, 1);
   }
   65% {
-    opacity: 0.92;
-    transform: translate3d(0, 0, 0) scale(1.01);
-    filter: brightness(1.05);
+    opacity: 0.95;
+    transform: translate3d(0, 0, 0) scale3d(1.008, 1.008, 1);
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-    filter: brightness(1);
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
 }
 
+@keyframes modal-fade-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* One-shot entrance utilities intentionally omit permanent will-change to avoid pinning GPU layers after completion */
 .fade-in {
-  animation: cosmic-fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: opacity, transform, filter;
+  animation: cosmic-fade-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .fade-in.duration-200 {
@@ -152,24 +158,29 @@
 }
 
 .animate-fade-in {
-  animation: cosmic-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: opacity, transform;
+  animation: cosmic-fade-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fadeIn {
+  animation: modal-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .blackhole-fade-in {
   animation:
-    cosmic-fade-in 1.8s cubic-bezier(0.16, 1, 0.3, 1) both,
-    cosmic-pulse 30s 1.8s infinite alternate ease-in-out;
-  will-change: opacity, transform, filter;
+    cosmic-fade-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) both,
+    cosmic-pulse 30s 1.4s infinite alternate ease-in-out;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .animate-logo-fade-in {
-  animation: logoFadeIn 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: opacity, transform, filter;
+  animation: logoFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-cosmic {
   animation: cosmic-pulse 30s infinite alternate ease-in-out;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .animate-badge-pulse::after {
@@ -179,6 +190,7 @@
   border-radius: inherit;
   border: 2px solid #00ff41;
   animation: pulse-badge 2.4s infinite;
+  will-change: transform, opacity;
 }
 
 .font-cinzel {
@@ -237,33 +249,33 @@ html.light .box-glow-green {
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
 }
 
-/* Neural Background Animations for old.jpg */
+/* Neural Background Animations (Pure GPU transform + opacity) */
 @keyframes neural-orbit {
   0% {
-    transform: scale(1.18) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale3d(1.18, 1.18, 1) rotate(0deg);
   }
   50% {
-    transform: scale(1.36) rotate(180deg);
+    transform: translate3d(0, 0, 0) scale3d(1.36, 1.36, 1) rotate(180deg);
   }
   100% {
-    transform: scale(1.18) rotate(360deg);
+    transform: translate3d(0, 0, 0) scale3d(1.18, 1.18, 1) rotate(360deg);
   }
 }
 
 @keyframes neural-pulse {
   0%, 100% {
-    opacity: 0.75;
-    filter: saturate(1.2) brightness(0.95) contrast(1.15);
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
   50% {
     opacity: 0.98;
-    filter: saturate(1.85) brightness(1.22) contrast(1.3) drop-shadow(0 0 18px rgba(0, 184, 255, 0.7));
+    transform: translate3d(0, 0, 0) scale3d(1.03, 1.03, 1);
   }
 }
 
 @keyframes neural-sweep {
   0% {
-    transform: translateY(-100%) rotate(25deg);
+    transform: translate3d(0, -100%, 0) rotate(25deg);
     opacity: 0;
   }
   30% {
@@ -273,7 +285,7 @@ html.light .box-glow-green {
     opacity: 0.6;
   }
   100% {
-    transform: translateY(120%) rotate(25deg);
+    transform: translate3d(0, 120%, 0) rotate(25deg);
     opacity: 0;
   }
 }
@@ -281,15 +293,19 @@ html.light .box-glow-green {
 .animate-neural-orbit {
   animation: neural-orbit 55s linear infinite;
   will-change: transform;
+  backface-visibility: hidden;
 }
 
 .animate-neural-pulse {
   animation: neural-pulse 7s ease-in-out infinite;
-  will-change: filter, opacity;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .animate-neural-sweep {
   animation: neural-sweep 4s ease-in-out infinite;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 /* 3D Celestial Planetary Spin Rotation around the Vertical Y-Axis (GPU-composited) */
@@ -374,27 +390,26 @@ html.light .box-glow-green {
   animation-play-state: paused !important;
 }
 
+/* Celestial Warp Transition (Pure GPU transform + opacity — zero filter repaints) */
 @keyframes celestial-warp-flare {
   0% {
     transform: translate3d(0, 0, 0) scale3d(0.92, 0.92, 1) rotate(0deg);
-    opacity: 0.95;
-    filter: brightness(1.8) drop-shadow(0 0 35px rgba(0, 255, 65, 0.9));
+    opacity: 0.9;
   }
   50% {
     transform: translate3d(0, 0, 0) scale3d(1.12, 1.12, 1) rotate(180deg);
     opacity: 1;
-    filter: brightness(2.2) drop-shadow(0 0 50px rgba(0, 184, 255, 1));
   }
   100% {
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1) rotate(360deg);
     opacity: 0.85;
-    filter: brightness(1);
   }
 }
 
 .animate-warp-burst {
-  animation: celestial-warp-flare 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, filter, opacity;
+  animation: celestial-warp-flare 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
 /* Celestial Orbital Revolution (Keplerian Orbit Motion around Center) */
@@ -437,12 +452,11 @@ html.light .box-glow-green {
 @keyframes orbit-pulse {
   0%, 100% {
     opacity: 0.35;
-    border-color: rgba(245, 158, 11, 0.35);
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
   50% {
     opacity: 0.85;
-    border-color: rgba(0, 229, 255, 0.7);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    transform: translate3d(0, 0, 0) scale3d(1.015, 1.015, 1);
   }
 }
 
@@ -450,43 +464,43 @@ html.light .box-glow-green {
 .orbit-ellipse-plane {
   transform: rotate(var(--orbit-tilt, -14deg)) scaleY(var(--orbit-eccentricity, 0.62));
   transform-origin: center center;
-  will-change: transform;
 }
 
 .orbit-planet-upright {
   transform: scaleY(calc(1 / var(--orbit-eccentricity, 0.62))) rotate(calc(-1 * var(--orbit-tilt, -14deg)));
   transform-origin: center center;
-  will-change: transform;
 }
 
 @keyframes trajectory-sweep-glow {
   0%, 100% {
     opacity: 0.45;
-    filter: drop-shadow(0 0 4px currentColor);
   }
   50% {
     opacity: 0.95;
-    filter: drop-shadow(0 0 12px currentColor);
   }
 }
 
 .animate-trajectory-glow {
   animation: trajectory-sweep-glow 3s ease-in-out infinite;
+  will-change: opacity;
 }
 
-/* Periodic Radial Gravitational Flare emitting from the Black Hole center */
+/* Periodic Radial Gravitational Flare emitting from the Black Hole center (Quantized ~20 Hz step-based easing) */
 @keyframes blackhole-radial-flare {
   0% {
     opacity: 0;
     transform: translate3d(0px, 0px, 0px) scale3d(0.55, 0.55, 1);
+    animation-timing-function: steps(22, end);
   }
   18% {
     opacity: 0.34;
     transform: translate3d(0px, 0px, 0px) scale3d(0.88, 0.88, 1);
+    animation-timing-function: steps(44, end);
   }
   58% {
     opacity: 0.14;
     transform: translate3d(0px, 0px, 0px) scale3d(1.65, 1.65, 1);
+    animation-timing-function: steps(42, end);
   }
   100% {
     opacity: 0;
@@ -498,14 +512,17 @@ html.light .box-glow-green {
   0% {
     opacity: 0;
     transform: translate3d(0px, 0px, 0px) scale3d(0.62, 0.62, 1);
+    animation-timing-function: steps(24, end);
   }
   22% {
     opacity: 0.24;
     transform: translate3d(0px, 0px, 0px) scale3d(1.02, 1.02, 1);
+    animation-timing-function: steps(46, end);
   }
   68% {
     opacity: 0.08;
     transform: translate3d(0px, 0px, 0px) scale3d(1.85, 1.85, 1);
+    animation-timing-function: steps(34, end);
   }
   100% {
     opacity: 0;
@@ -514,41 +531,73 @@ html.light .box-glow-green {
 }
 
 .animate-blackhole-radial-flare {
-  animation: blackhole-radial-flare 5.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation: blackhole-radial-flare 5.6s steps(22, end) infinite;
   mix-blend-mode: screen;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
 .animate-blackhole-radial-flare-delayed {
-  animation: blackhole-radial-flare-secondary 5.6s cubic-bezier(0.16, 1, 0.3, 1) 2.8s infinite;
+  animation: blackhole-radial-flare-secondary 5.6s steps(24, end) 2.8s infinite;
   mix-blend-mode: screen;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
-/* Ethereal high-transparency Event Horizon photon ring pulsing via GPU-composited opacity + transform */
+/* Ethereal high-transparency Event Horizon photon ring pulsing (Quantized ~18 Hz step-based easing) */
 @keyframes blackhole-center-border-pulse {
-  0%, 44%, 100% {
+  0% {
     opacity: 0.38;
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    animation-timing-function: steps(18, end);
   }
   18% {
     opacity: 0.64;
     transform: translate3d(0, 0, 0) scale3d(1.018, 1.018, 1);
+    animation-timing-function: steps(26, end);
+  }
+  44% {
+    opacity: 0.38;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    animation-timing-function: steps(28, end);
   }
   72% {
     opacity: 0.5;
     transform: translate3d(0, 0, 0) scale3d(1.008, 1.008, 1);
+    animation-timing-function: steps(28, end);
+  }
+  100% {
+    opacity: 0.38;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
 }
 
 @keyframes blackhole-center-border-pulse-swallow {
-  0%, 44%, 100% {
+  0% {
     opacity: 0.46;
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    animation-timing-function: steps(18, end);
   }
-  18%, 72% {
+  18% {
     opacity: 0.72;
     transform: translate3d(0, 0, 0) scale3d(1.022, 1.022, 1);
+    animation-timing-function: steps(26, end);
+  }
+  44% {
+    opacity: 0.46;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    animation-timing-function: steps(28, end);
+  }
+  72% {
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0) scale3d(1.022, 1.022, 1);
+    animation-timing-function: steps(28, end);
+  }
+  100% {
+    opacity: 0.46;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
 }
 
@@ -559,8 +608,10 @@ html.light .box-glow-green {
     0 0 16px 3px rgba(251, 146, 60, 0.2),
     0 0 30px 6px rgba(234, 88, 12, 0.1);
   mix-blend-mode: screen;
-  animation: blackhole-center-border-pulse 5.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation: blackhole-center-border-pulse 5.6s steps(18, end) infinite;
   will-change: opacity, transform;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
 .animate-blackhole-border-pulse-swallow {
@@ -570,309 +621,53 @@ html.light .box-glow-green {
     0 0 20px 4px rgba(255, 202, 40, 0.26),
     0 0 36px 8px rgba(255, 109, 0, 0.16);
   mix-blend-mode: screen;
-  animation: blackhole-center-border-pulse-swallow 5.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation: blackhole-center-border-pulse-swallow 5.6s steps(18, end) infinite;
   will-change: opacity, transform;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
-/* High-Energy Relativistic Plasma Jet animations (multi-harmonic velocity & smooth easing) */
-@keyframes jet-filament-flow {
-  0% {
-    stroke-dasharray: 42 12 88 18;
-    stroke-dashoffset: 0;
-    opacity: 0.68;
-  }
-  45% {
-    opacity: 0.96;
-  }
-  100% {
-    stroke-dasharray: 42 12 88 18;
-    stroke-dashoffset: -160;
-    opacity: 0.68;
-  }
-}
-
-@keyframes jet-spine-surge {
-  0% {
-    stroke-dasharray: 64 16 110 22;
-    stroke-dashoffset: 0;
-    opacity: 0.78;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    stroke-dasharray: 64 16 110 22;
-    stroke-dashoffset: -212;
-    opacity: 0.78;
-  }
-}
-
-@keyframes jet-pulse-fast {
-  0% {
-    stroke-dasharray: 14 78 24 104;
-    stroke-dashoffset: 0;
-    opacity: 0.45;
-  }
-  35% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.85;
-  }
-  100% {
-    stroke-dasharray: 14 78 24 104;
-    stroke-dashoffset: -220;
-    opacity: 0.45;
-  }
-}
-
-@keyframes jet-core-breathe {
-  0%, 100% {
-    opacity: 0.78;
-    transform: scale3d(0.95, 0.97, 1);
-  }
-  45% {
-    opacity: 1;
-    transform: scale3d(1.06, 1.09, 1);
-  }
-}
-
-.animate-jet-filament-flow {
-  animation: jet-filament-flow 3.1s cubic-bezier(0.32, 0.08, 0.24, 1) infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-jet-filament-flow-delayed {
-  animation: jet-filament-flow 3.9s cubic-bezier(0.28, 0.12, 0.22, 1) -1.55s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-jet-filament-harmonic {
-  animation: jet-filament-flow 4.7s cubic-bezier(0.36, 0.06, 0.26, 1) -2.3s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-jet-spine-surge {
-  animation: jet-spine-surge 2.4s cubic-bezier(0.22, 0.68, 0.35, 1) infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-jet-pulse-fast {
-  animation: jet-pulse-fast 1.85s cubic-bezier(0.18, 0.72, 0.28, 1) infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-jet-pulse-fast-delayed {
-  animation: jet-pulse-fast 2.15s cubic-bezier(0.2, 0.7, 0.3, 1) -0.95s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-jet-core-breathe {
-  animation: jet-core-breathe 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  transform-origin: center center;
-  will-change: transform, opacity;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-jet-filament-flow,
-  .animate-jet-filament-flow-delayed,
-  .animate-jet-filament-harmonic,
-  .animate-jet-spine-surge,
-  .animate-jet-pulse-fast,
-  .animate-jet-pulse-fast-delayed,
-  .animate-jet-core-breathe,
-  .animate-horizon-lensing-breathe,
-  .animate-lensing-arc-surge,
-  .animate-lensing-arc-flow,
-  .animate-lensing-arc-flow-fast,
-  .animate-lensing-arc-shear,
-  .animate-lensing-arc-flow-slow,
-  .animate-lensing-arc-drift,
-  .animate-lensing-knot-streak,
-  .animate-lensing-knot-streak-delayed,
-  .animate-outer-whirlpool-drift,
-  .animate-outer-whirlpool-drift-fast,
-  .animate-outer-lensing-caustic {
-    animation: none;
-  }
-}
-
-/* Living Kerr Event Horizon Gravitational Lensing Shimmer (Pure GPU transform + opacity) */
+/* Living Kerr Event Horizon Gravitational Lensing Shimmer (Quantized ~15 Hz step-based breathing) */
 @keyframes horizon-lensing-breathe {
-  0%, 100% {
+  0% {
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
     opacity: 0.92;
+    animation-timing-function: steps(40, end);
   }
   42% {
     transform: translate3d(0, 0, 0) scale3d(1.022, 1.016, 1);
     opacity: 1;
+    animation-timing-function: steps(30, end);
   }
   74% {
     transform: translate3d(0, 0, 0) scale3d(1.008, 1.006, 1);
     opacity: 0.96;
-  }
-}
-
-/* Innermost ISCO high-velocity plasma surge with subtle periastron acceleration */
-@keyframes lensing-arc-surge {
-  0% {
-    stroke-dasharray: 44 26 92 38;
-    stroke-dashoffset: 0;
-    opacity: 0.62;
-  }
-  26% {
-    stroke-dashoffset: -64;
-    opacity: 0.98;
-  }
-  62% {
-    stroke-dashoffset: -136;
-    opacity: 0.84;
+    animation-timing-function: steps(26, end);
   }
   100% {
-    stroke-dasharray: 44 26 92 38;
-    stroke-dashoffset: -200;
-    opacity: 0.62;
-  }
-}
-
-/* Mid-disk turbulent magnetic shear with subtle velocity inflections */
-@keyframes lensing-arc-flow {
-  0% {
-    stroke-dasharray: 58 28 112 42;
-    stroke-dashoffset: 0;
-    opacity: 0.56;
-  }
-  30% {
-    stroke-dashoffset: -82;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
     opacity: 0.92;
-  }
-  66% {
-    stroke-dashoffset: -164;
-    opacity: 0.78;
-  }
-  100% {
-    stroke-dasharray: 58 28 112 42;
-    stroke-dashoffset: -240;
-    opacity: 0.56;
-  }
-}
-
-/* Secondary harmonic plasma shear (distinct dash cadence & velocity curve) */
-@keyframes lensing-arc-shear {
-  0% {
-    stroke-dasharray: 34 22 76 32 48 28;
-    stroke-dashoffset: 0;
-    opacity: 0.52;
-  }
-  38% {
-    stroke-dashoffset: -104;
-    opacity: 0.9;
-  }
-  72% {
-    stroke-dashoffset: -182;
-    opacity: 0.74;
-  }
-  100% {
-    stroke-dasharray: 34 22 76 32 48 28;
-    stroke-dashoffset: -240;
-    opacity: 0.52;
-  }
-}
-
-/* Outer halo slower viscous orbital drift */
-@keyframes lensing-arc-drift {
-  0% {
-    stroke-dasharray: 84 44 132 60;
-    stroke-dashoffset: 0;
-    opacity: 0.4;
-  }
-  48% {
-    stroke-dashoffset: -168;
-    opacity: 0.72;
-  }
-  100% {
-    stroke-dasharray: 84 44 132 60;
-    stroke-dashoffset: -320;
-    opacity: 0.4;
-  }
-}
-
-/* Compact relativistic synchrotron knots streaking rapidly across the disk */
-@keyframes lensing-knot-streak {
-  0% {
-    stroke-dasharray: 14 118 22 146;
-    stroke-dashoffset: 0;
-    opacity: 0.35;
-  }
-  24% {
-    stroke-dashoffset: -86;
-    opacity: 1;
-  }
-  58% {
-    stroke-dashoffset: -196;
-    opacity: 0.88;
-  }
-  100% {
-    stroke-dasharray: 14 118 22 146;
-    stroke-dashoffset: -300;
-    opacity: 0.35;
   }
 }
 
 .animate-horizon-lensing-breathe {
-  animation: horizon-lensing-breathe 6.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: horizon-lensing-breathe 6.4s steps(40, end) infinite;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
-.animate-lensing-arc-surge {
-  animation: lensing-arc-surge 2.25s cubic-bezier(0.24, 0.58, 0.32, 1) infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-lensing-arc-flow-fast {
-  animation: lensing-arc-flow 2.95s cubic-bezier(0.28, 0.14, 0.24, 1) -0.6s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-lensing-arc-shear {
-  animation: lensing-arc-shear 3.65s cubic-bezier(0.34, 0.08, 0.26, 1) -1.35s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-lensing-arc-flow {
-  animation: lensing-arc-flow 4.45s cubic-bezier(0.32, 0.1, 0.24, 1) -2.1s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-lensing-arc-flow-slow {
-  animation: lensing-arc-shear 5.65s cubic-bezier(0.36, 0.08, 0.28, 1) -2.9s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-lensing-arc-drift {
-  animation: lensing-arc-drift 7.1s cubic-bezier(0.42, 0.04, 0.3, 1) -3.4s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-lensing-knot-streak {
-  animation: lensing-knot-streak 2.05s cubic-bezier(0.2, 0.66, 0.3, 1) infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.animate-lensing-knot-streak-delayed {
-  animation: lensing-knot-streak 2.55s cubic-bezier(0.22, 0.62, 0.32, 1) -1.15s infinite;
-  will-change: stroke-dashoffset, opacity;
-}
-
-/* Outer Disk Whirlpool Inward Spiral Drift & High-Velocity Plasma Lensing Caustics */
+/* Outer Disk Whirlpool Inward Spiral Drift & High-Velocity Plasma Lensing Caustics (24 Hz cinema-quantized steps) */
 @keyframes outer-whirlpool-drift {
   0% {
     transform: translate3d(0, 0, 0) rotateZ(0deg) scale3d(1.05, 1.05, 1);
     opacity: 0.48;
+    animation-timing-function: steps(178, end);
   }
   45% {
     transform: translate3d(0, 0, 0) rotateZ(165deg) scale3d(0.95, 0.95, 1);
     opacity: 0.9;
+    animation-timing-function: steps(218, end);
   }
   100% {
     transform: translate3d(0, 0, 0) rotateZ(360deg) scale3d(1.05, 1.05, 1);
@@ -884,10 +679,12 @@ html.light .box-glow-green {
   0% {
     transform: translate3d(0, 0, 0) rotateZ(0deg) scale3d(1.03, 1.03, 1);
     opacity: 0.42;
+    animation-timing-function: steps(125, end);
   }
   50% {
     transform: translate3d(0, 0, 0) rotateZ(188deg) scale3d(0.92, 0.92, 1);
     opacity: 0.86;
+    animation-timing-function: steps(125, end);
   }
   100% {
     transform: translate3d(0, 0, 0) rotateZ(360deg) scale3d(1.03, 1.03, 1);
@@ -899,14 +696,17 @@ html.light .box-glow-green {
   0% {
     transform: translate3d(0, 0, 0) rotateZ(0deg) scale3d(1, 1, 1);
     opacity: 0.56;
+    animation-timing-function: steps(75, end);
   }
   38% {
     transform: translate3d(0, 0, 0) rotateZ(142deg) scale3d(1.035, 1.035, 1);
     opacity: 0.88;
+    animation-timing-function: steps(67, end);
   }
   72% {
     transform: translate3d(0, 0, 0) rotateZ(264deg) scale3d(0.985, 0.985, 1);
     opacity: 0.7;
+    animation-timing-function: steps(55, end);
   }
   100% {
     transform: translate3d(0, 0, 0) rotateZ(360deg) scale3d(1, 1, 1);
@@ -915,109 +715,154 @@ html.light .box-glow-green {
 }
 
 .animate-outer-whirlpool-drift {
-  animation: outer-whirlpool-drift 16.5s linear infinite;
+  animation: outer-whirlpool-drift 16.5s steps(178, end) infinite;
   transform-origin: center center;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
 .animate-outer-whirlpool-drift-fast {
-  animation: outer-whirlpool-drift-fast 10.4s linear -4.2s infinite;
+  animation: outer-whirlpool-drift-fast 10.4s steps(125, end) -4.2s infinite;
   transform-origin: center center;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
 .animate-outer-lensing-caustic {
-  animation: outer-lensing-caustic 8.2s linear infinite;
+  animation: outer-lensing-caustic 8.2s steps(75, end) infinite;
   transform-origin: center center;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
-/* Relativistic Jet Burst at the end of star swallowing (reveals the SWID-SHRK crest) */
+/* Bipolar Relativistic Jet Eruption Burst (30 Hz rAF-paced step-based easing, pure GPU scale3d + opacity) */
 @keyframes blackhole-jet-burst {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) scaleY(0.14) scaleX(0.32);
+    transform: translate3d(0, 0, 0) scale3d(0.32, 0.14, 1);
+    animation-timing-function: steps(10, end);
   }
   22% {
     opacity: 0.98;
-    transform: translate3d(0, 0, 0) scaleY(1.16) scaleX(1.12);
+    transform: translate3d(0, 0, 0) scale3d(1.12, 1.16, 1);
+    animation-timing-function: steps(17, end);
   }
   62% {
     opacity: 0.76;
-    transform: translate3d(0, 0, 0) scaleY(1.02) scaleX(0.92);
+    transform: translate3d(0, 0, 0) scale3d(0.92, 1.02, 1);
+    animation-timing-function: steps(16, end);
   }
   100% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) scaleY(0.9) scaleX(0.48);
+    transform: translate3d(0, 0, 0) scale3d(0.48, 0.9, 1);
   }
 }
 
 .animate-blackhole-jet-burst {
-  animation: blackhole-jet-burst 1.45s cubic-bezier(0.12, 0.9, 0.24, 1) forwards;
+  animation: blackhole-jet-burst 1.45s steps(10, end) forwards;
+  transform-origin: center center;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
-/* SWID-SHRK Crest emerging smoothly out of the black hole jet after swallowing ends */
+/* SWID-SHRK Crest emerging smoothly out of the black hole jet (30 Hz quantized step-based easing) */
 @keyframes crest-emerge-from-jet {
   0% {
     opacity: 0;
-    transform: translate3d(0, -24px, 0) scale(0.14);
-    filter: brightness(2.4) blur(6px) drop-shadow(0 0 24px rgba(125, 211, 252, 0.9));
+    transform: translate3d(0, -24px, 0) scale3d(0.14, 0.14, 1);
+    animation-timing-function: steps(20, end);
   }
   55% {
-    opacity: 0.95;
-    transform: translate3d(0, 2px, 0) scale(1.05);
-    filter: brightness(1.45) blur(0px) drop-shadow(0 0 18px rgba(255, 255, 255, 0.92));
+    opacity: 0.96;
+    transform: translate3d(0, 2px, 0) scale3d(1.05, 1.05, 1);
+    animation-timing-function: steps(16, end);
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-    filter: brightness(1.15) contrast(1.25);
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
 }
 
 .animate-crest-emerge-from-jet {
-  animation: crest-emerge-from-jet 1.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: transform, opacity, filter;
+  animation: crest-emerge-from-jet 1.25s steps(20, end) both;
+  backface-visibility: hidden;
 }
 
-/* Subtle Cyber Glitch Hover Effect using CSS transforms for the SWID-SHRK Crest */
+/* Subtle Cyber Glitch Hover Effect (Discrete step-quantized GPU transform + opacity flicker) */
 @keyframes crest-glitch {
   0% {
     transform: translate3d(0, 0, 0) skewX(0deg) scale3d(1, 1, 1);
+    opacity: 1;
   }
   18% {
     transform: translate3d(-2px, 1px, 0) skewX(-3deg) scale3d(1.03, 1.03, 1);
-    filter: brightness(1.35) contrast(1.28) drop-shadow(-2px 0 6px rgba(0, 184, 255, 0.85)) drop-shadow(2px 0 6px rgba(0, 255, 65, 0.75));
+    opacity: 0.86;
   }
   36% {
     transform: translate3d(2px, -1px, 0) skewX(2.5deg) scale3d(1.04, 1.04, 1);
+    opacity: 1;
   }
   54% {
     transform: translate3d(-1.5px, -1px, 0) skewX(-1.5deg) scale3d(1.03, 1.03, 1);
-    filter: brightness(1.3) contrast(1.25) drop-shadow(2px 0 8px rgba(0, 184, 255, 0.8)) drop-shadow(-2px 0 5px rgba(255, 49, 49, 0.45));
+    opacity: 0.88;
   }
   72% {
     transform: translate3d(1px, 1px, 0) skewX(1deg) scale3d(1.04, 1.04, 1);
+    opacity: 1;
   }
   100% {
     transform: translate3d(0, 0, 0) skewX(0deg) scale3d(1.05, 1.05, 1);
+    opacity: 1;
   }
 }
 
 .crest-glitch-hover:hover,
 .group:hover .crest-glitch-target,
 .crest-glitch-active {
-  animation: crest-glitch 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  will-change: transform, filter;
+  animation: crest-glitch 0.38s steps(2, end) both;
+  backface-visibility: hidden;
 }
 
+/* Consolidated reduced-motion safeguard across all celestial, jet, planetary, and UI animations */
 @media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .animate-fade-in,
+  .animate-fadeIn,
+  .blackhole-fade-in,
+  .animate-logo-fade-in,
+  .animate-cosmic,
+  .animate-badge-pulse::after,
+  .animate-neural-orbit,
+  .animate-neural-pulse,
+  .animate-neural-sweep,
+  .animate-planet-spin,
+  .animate-planet-spin-fast,
+  .animate-planet-spin-reverse,
+  .animate-surface-drift,
+  .animate-surface-drift-fast,
+  .animate-planet-moon-orbit,
+  .animate-warp-burst,
+  .animate-trajectory-glow,
+  .animate-blackhole-radial-flare,
+  .animate-blackhole-radial-flare-delayed,
+  .animate-blackhole-border-pulse,
+  .animate-blackhole-border-pulse-swallow,
+  .animate-horizon-lensing-breathe,
+  .animate-outer-whirlpool-drift,
+  .animate-outer-whirlpool-drift-fast,
+  .animate-outer-lensing-caustic,
+  .animate-blackhole-jet-burst,
+  .animate-crest-emerge-from-jet,
   .crest-glitch-hover:hover,
   .group:hover .crest-glitch-target,
   .crest-glitch-active {
-    animation: none;
+    animation: none !important;
   }
 }
+
 
 
